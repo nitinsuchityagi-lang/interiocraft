@@ -47,7 +47,9 @@ export default function Hero() {
           Modern interiors tailored to your lifestyle
         </p>
         <button className="bg-white text-black px-6 py-3 rounded-md">
-          Get Free Consultation
+        <a href="https://wa.me/919036206790" className="bg-white text-black px-6 py-3 rounded-md">
+            Get Free Consultation
+        </a>
         </button>
       </div>
     </section>

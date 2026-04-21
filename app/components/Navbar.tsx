@@ -6,6 +6,7 @@ import Image from "next/image"
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
+  const [open, setOpen] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,8 +26,8 @@ export default function Navbar() {
       }`}
     >
       <div className="flex justify-between items-center px-6 max-w-7xl mx-auto">
-
-        {/* ✅ Logo + Text */}
+        
+        {/* Logo */}
         <Link
           href="/"
           className={`flex items-center gap-2 text-xl font-semibold transition ${
@@ -44,9 +45,9 @@ export default function Navbar() {
           InterioCraft
         </Link>
 
-        {/* Menu */}
+        {/* Desktop Menu */}
         <ul
-          className={`flex gap-6 text-sm transition ${
+          className={`hidden md:flex gap-6 text-sm transition ${
             scrolled ? "text-black" : "text-white"
           }`}
         >
@@ -55,13 +56,11 @@ export default function Navbar() {
               Home
             </Link>
           </li>
-
           <li>
             <Link href="/about" className="hover:opacity-70 transition">
               About Us
             </Link>
           </li>
-
           <li>
             <a href="/#portfolio" className="hover:opacity-70 transition">
               Portfolio
@@ -79,7 +78,38 @@ export default function Navbar() {
           </li>
         </ul>
 
+        {/* Hamburger Button (Mobile Only) */}
+        <button
+          className={`md:hidden text-2xl ${
+            scrolled ? "text-black" : "text-white"
+          }`}
+          onClick={() => setOpen(!open)}
+          aria-label="Toggle Menu"
+        >
+          ☰
+        </button>
       </div>
+
+      {/* Mobile Menu */}
+      {open && (
+        <div className="md:hidden bg-white text-black flex flex-col items-center gap-4 py-4 shadow-md">
+          <Link href="/" onClick={() => setOpen(false)}>
+            Home
+          </Link>
+          <Link href="/about" onClick={() => setOpen(false)}>
+            About Us
+          </Link>
+          <a href="/#portfolio" onClick={() => setOpen(false)}>
+            Portfolio
+          </a>
+          <a href="/#services" onClick={() => setOpen(false)}>
+            Services
+          </a>
+          <a href="/#contact" onClick={() => setOpen(false)}>
+            Contact
+          </a>
+        </div>
+      )}
     </nav>
   )
 }

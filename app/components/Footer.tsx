@@ -27,7 +27,7 @@ export default function Footer() {
           <h3 className="text-lg mb-3">Contact</h3>
           <p className="text-gray-300 text-sm">Noida, India</p>
           <p className="text-gray-300 text-sm mt-1">+91 9036206790</p>
-          <p className="text-gray-300 text-sm mt-1">info@interiorstudio.com</p>
+          <p className="text-gray-300 text-sm mt-1">contact@interiocraft.co.in</p>
         </div>
 
       </div>

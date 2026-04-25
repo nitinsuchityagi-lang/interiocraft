@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Navigation, Pagination, Zoom } from "swiper/modules"
 
@@ -10,52 +10,30 @@ import "swiper/css/pagination"
 import "swiper/css/zoom"
 
 export default function Portfolio() {
-  const [activeCategory, setActiveCategory] = useState<any>(null)
+  const [projects, setProjects] = useState<any[]>([])
+  const [activeProject, setActiveProject] = useState<any>(null)
+
+  // ✅ Default = All
   const [filter, setFilter] = useState("All")
 
-  // 🔥 Updated structure (multiple images per category)
-  const projects = [
-    {
-      title: "Living Room",
-      category: "Home",
-      images: ["/images/p1.jpg", "/images/p1-2.jpg", "/images/p1-3.jpg"],
-    },
-    {
-      title: "Bedroom",
-      category: "Home",
-      images: ["/images/p2.jpg", "/images/p2-2.jpg"],
-    },
-    {
-      title: "Kitchen",
-      category: "Home",
-      images: ["/images/p3.jpg"],
-    },
-    {
-      title: "Office",
-      category: "Work",
-      images: ["/images/p4.jpg", "/images/p4-2.jpg"],
-    },
-    {
-      title: "Dining",
-      category: "Home",
-      images: ["/images/p5.jpg"],
-    },
-    {
-      title: "Luxury Hall",
-      category: "Premium",
-      images: ["/images/p6.jpg", "/images/p6-2.jpg"],
-    },
-  ]
+  // Fetch projects
+  useEffect(() => {
+    fetch("/api/projects")
+      .then((res) => res.json())
+      .then((data) => setProjects(data))
+  }, [])
 
-  const categories = ["All", "Home", "Work", "Premium"]
+  // ✅ Categories (with All)
+  const categories = ["All", "Home", "Office", "Outdoor"]
 
+  // ✅ Filter logic
   const filteredProjects =
     filter === "All"
       ? projects
       : projects.filter((p) => p.category === filter)
 
   return (
-    <section id="portfolio" className="p-10">
+    <section id="portfolio" className="p-6 md:p-10">
       <h2 className="text-3xl mb-6 text-center">Our Work</h2>
 
       {/* 🔹 Category Filter */}
@@ -64,8 +42,10 @@ export default function Portfolio() {
           <button
             key={cat}
             onClick={() => setFilter(cat)}
-            className={`px-4 py-2 rounded ${
-              filter === cat ? "bg-black text-white" : "bg-gray-200"
+            className={`px-4 py-2 rounded transition ${
+              filter === cat
+                ? "bg-black text-white"
+                : "bg-gray-200 hover:bg-gray-300"
             }`}
           >
             {cat}
@@ -74,31 +54,39 @@ export default function Portfolio() {
       </div>
 
       {/* 🔹 Grid */}
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
         {filteredProjects.map((p, i) => (
           <div
             key={i}
-            onClick={() => setActiveCategory(p)}
+            onClick={() => setActiveProject(p)}
             className="cursor-pointer overflow-hidden rounded-lg shadow hover:scale-105 transition"
           >
             <img
               src={p.images[0]}
               className="w-full h-64 object-cover"
+              alt={p.title}
             />
-            <p className="p-3 text-center">{p.title}</p>
+            <p className="p-3 text-center font-medium">{p.title}</p>
           </div>
         ))}
       </div>
 
-      {/* 🔥 Modal Slider */}
-      {activeCategory && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-          <div className="relative w-[90%] md:w-[60%]">
+      {/* Empty State */}
+      {filteredProjects.length === 0 && (
+        <p className="text-center text-gray-500 mt-6">
+          No projects available
+        </p>
+      )}
 
-            {/* Close Button */}
+      {/* 🔥 Modal Slider */}
+      {activeProject && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+          <div className="relative w-[95%] md:w-[60%]">
+
+            {/* Close */}
             <button
-              onClick={() => setActiveCategory(null)}
-              className="absolute -top-10 right-0 text-white text-2xl"
+              onClick={() => setActiveProject(null)}
+              className="absolute -top-10 right-0 text-white text-3xl"
             >
               ✕
             </button>
@@ -108,14 +96,14 @@ export default function Portfolio() {
               navigation
               pagination={{ clickable: true }}
               zoom={true}
-              className="rounded-lg"
             >
-              {activeCategory.images.map((img: string, index: number) => (
+              {activeProject.images.map((img: string, index: number) => (
                 <SwiperSlide key={index}>
                   <div className="swiper-zoom-container">
                     <img
                       src={img}
-                      className="w-full h-[500px] object-cover"
+                      className="w-full h-[400px] md:h-[500px] object-cover"
+                      alt=""
                     />
                   </div>
                 </SwiperSlide>
